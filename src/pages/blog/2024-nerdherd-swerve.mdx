@@ -1,0 +1,31 @@
+---
+layout: "@layouts/BlogPost.astro"
+title: 2024 NerdHerd Swerve Overview
+description: A brief overview of the swerve code that FRC 4043 NerdHerd
+  used for swerve through the 2024 season
+categories: [frc, robotics, swerve]
+author: Zynh Ludwig
+draft: true
+---
+
+## TODO
+
+- footnotes for heading correction and cosine compensation?
+- Figure out impact of wpilib 2025
+
+## Preface
+
+The current NerdHerd swerve codes core functionality is all put together
+by hand, using WPILib utils whenever possible to offload work. As such it also
+doesn't do anything fancy that you might get with using [CTRE's swerve
+framework] or [YAGSL], such as heading correction or cosine compensation.
+It also doesn't do some simple things, like a lock pose. This doesn't mean
+those things are impossible, the code is simple enough
+that any of those features could be added.
+
+While lacking in functionality, our repository also isn't a bastion of code
+quality. You'll find our code almost entirely uncommented, and structurally
+questionable.
+
+[YAGSL]: https://docs.yagsl.com
+[CTRE's swerve framework]: https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/mechanisms/swerve/swerve-overview.html
