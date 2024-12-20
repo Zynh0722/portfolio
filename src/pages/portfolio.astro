@@ -9,16 +9,16 @@ const content = {
 };
 
 const mdFiles = (await Astro.glob("../data/projects/*.md")).filter(
-  (post) => !post.frontmatter.draft || import.meta.env.DEV
+  (post: { frontmatter: { draft: any; }; }) => !post.frontmatter.draft || import.meta.env.DEV
 );
 const headings = mdFiles
-  .map((post) => post.frontmatter.title)
-  .map((title) => ({
+  .map((post: { frontmatter: { title: any; }; }) => post.frontmatter.title)
+  .map((title: string) => ({
     slug: title.replace(" ", "-").toLowerCase(),
     title,
   }));
 
-const posts = mdFiles.map((post, i) => ({
+const posts = mdFiles.map((post: any, i: string | number) => ({
   post,
   ...headings[i],
 }));
@@ -30,7 +30,7 @@ const posts = mdFiles.map((post, i) => ({
   <ul class="toc-wrapper">
     <h2 class="toc-header">Table of Contents</h2>
     {
-      posts.map(({ title, slug }) => (
+      posts.map(({ title, slug }: any) => (
         <li class="toc-title">
           <a href={`#${slug}`}>{title}</a>
         </li>
@@ -41,7 +41,7 @@ const posts = mdFiles.map((post, i) => ({
   <hr />
 
   {
-    posts.map(({ post, title, slug }) => (
+    posts.map(({ post, title, slug }: any) => (
       <article>
         <div class="project-title-wrapper">
           <h2 id={slug} style="text-decoration: underline;">
@@ -54,6 +54,7 @@ const posts = mdFiles.map((post, i) => ({
     ))
   }
 </Layout>
+
 <style>
   .toc-wrapper {
     display: flex;
