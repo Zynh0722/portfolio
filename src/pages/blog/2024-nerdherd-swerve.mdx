@@ -15,17 +15,53 @@ draft: true
 
 ## Preface
 
-The current NerdHerd swerve codes core functionality is all put together
+[YAGSL]: https://docs.yagsl.com
+[CTRE's swerve framework]: https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/mechanisms/swerve/swerve-overview.html
+[heading correction]: https://docs.yagsl.com/overview/our-features/heading-correction
+[cosine compensation]: https://docs.yagsl.com/overview/our-features/cosine-compensation
+
+The current NerdHerd swerve code's core functionality is all put together
 by hand, using WPILib utils whenever possible to offload work. As such it also
 doesn't do anything fancy that you might get with using [CTRE's swerve
-framework] or [YAGSL], such as heading correction or cosine compensation.
+framework] or [YAGSL], such as [heading correction] or [cosine compensation].
 It also doesn't do some simple things, like a lock pose. This doesn't mean
 those things are impossible, the code is simple enough
 that any of those features could be added.
 
-While lacking in functionality, our repository also isn't a bastion of code
-quality. You'll find our code almost entirely uncommented, and structurally
-questionable.
+This code largely acts as a minimum barrier to entry in to swerve for teams
+who are interested in implementing things largely for themselves. If you just
+want something that works good with minimal effort, go use one of the previous
+linked frameworks. They will likely be easier to setup, and give you a better
+end result.
 
-[YAGSL]: https://docs.yagsl.com
-[CTRE's swerve framework]: https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/mechanisms/swerve/swerve-overview.html
+Also we program in Java. My apologies.
+
+## What problem are we trying to solve?
+
+### What is a swerve drive?
+
+### The components of swerve drive control
+
+I feel it is good to first define what is necessary to control a swerve drive
+
+#### Kinematics
+
+#### Module Control
+
+Once we know what speed and direction the modules need to go, we need to
+actually control the motors[^1]
+
+### The problems we can lean on WPILib for
+
+#### WPILib Kinematics
+
+Thankfully WPILib almost entirely removes the kinematics problem for us. The
+`SwerveDriveKinematics` class.
+
+#### PID Loops
+
+Our implementation uses PID loops for controlling our module positions. I
+honestly don't know of anyone who _doesn't_ use a PID loop for module heading
+control, and most use them for module speed control.[^1]
+
+[^1]: This is a test of a footnote
