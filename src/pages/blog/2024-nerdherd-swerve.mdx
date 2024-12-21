@@ -38,18 +38,36 @@ Also we program in Java. My apologies.
 
 ## What problem are we trying to solve?
 
-### What is a swerve drive?
+[team 1640's definition]: https://team1640.com/wiki/index.php/Swerve_Central
+[DifferentialDrive]: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/drive/DifferentialDrive.html
+[arcadeDrive]: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/drive/DifferentialDrive.html#arcadeDrive(double,double)
+[tankDrive]: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/drive/DifferentialDrive.html#tankDrive(double,double)
+
+Outside of FRC the defintion of swerve drive is a bit more broad, but for the
+purposes of FRC, I quite like [team 1640's definition], where a swerve drive is
+any drive train where **all drive wheels are independently driven and steered**.
+
+And to everyone's surpise, our team wanted to control our robot with some kind
+of joystick? and they expect it to move?
+
+If we were making a skid steer platform, we could just use [DifferentialDrive]
+and be done with it. Directly pipe our controller inputs into the diffdrive's
+[tankDrive] or [arcadeDrive] methods, and we'd have a driving robot.
+
+Unfortunately with a swerve drive we can't simply map out inputs to our outputs,
+as in all but the simplest case,
+
+We'll pin the joystick thing until later and for now we will simply work on
+getting the robot to move without a joystick.[^1]
 
 ### The components of swerve drive control
-
-I feel it is good to first define what is necessary to control a swerve drive
 
 #### Kinematics
 
 #### Module Control
 
 Once we know what speed and direction the modules need to go, we need to
-actually control the motors[^1]
+actually control the motors
 
 ### The problems we can lean on WPILib for
 
@@ -64,4 +82,4 @@ Our implementation uses PID loops for controlling our module positions. I
 honestly don't know of anyone who _doesn't_ use a PID loop for module heading
 control, and most use them for module speed control.[^1]
 
-[^1]: This is a test of a footnote
+[^1]: Testing?
