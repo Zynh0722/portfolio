@@ -10,7 +10,6 @@ draft: true
 
 ## TODO
 
-- footnotes for heading correction and cosine compensation?
 - Figure out impact of wpilib 2025
 
 ## Preface
@@ -19,9 +18,10 @@ draft: true
 [CTRE's swerve framework]: https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/mechanisms/swerve/swerve-overview.html
 [heading correction]: https://docs.yagsl.com/overview/our-features/heading-correction
 [cosine compensation]: https://docs.yagsl.com/overview/our-features/cosine-compensation
+[WPILib utils]: https://docs.wpilib.org/en/stable
 
 The current NerdHerd swerve code's core functionality is all put together
-by hand, using WPILib utils whenever possible to offload work. As such it also
+by hand, using [WPILib utils] whenever possible to offload work. As such it also
 doesn't do anything fancy that you might get with using [CTRE's swerve
 framework] or [YAGSL], such as [heading correction] or [cosine compensation].
 It also doesn't do some simple things, like a lock pose. This doesn't mean
@@ -42,6 +42,7 @@ Also we program in Java. My apologies.
 [DifferentialDrive]: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/drive/DifferentialDrive.html
 [arcadeDrive]: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/drive/DifferentialDrive.html#arcadeDrive(double,double)
 [tankDrive]: https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/drive/DifferentialDrive.html#tankDrive(double,double)
+[differential drivebase]: https://www.andymark.com/products/am14u5-6-wheel-drop-center-robot-drive-base-first-kit-of-parts-chassis
 
 Outside of FRC the defintion of swerve drive is a bit more broad, but for the
 purposes of FRC, I quite like [team 1640's definition], where a swerve drive is
@@ -55,19 +56,59 @@ and be done with it. Directly pipe our controller inputs into the diffdrive's
 [tankDrive] or [arcadeDrive] methods, and we'd have a driving robot.
 
 Unfortunately with a swerve drive we can't simply map out inputs to our outputs,
-as in all but the simplest case,
+as in all but the simplest case, our motor directions and speeds have no
+correlation to our joystick inputs. This is unlike a [differential drivebase]
+where moving the stick forward directly translates to rotating the wheels
+forward.
 
 We'll pin the joystick thing until later and for now we will simply work on
-getting the robot to move without a joystick.[^1]
+getting the robot to move without a joystick.
 
 ### The components of swerve drive control
 
-#### Kinematics
+As usual with a difficult task, we should start by breaking one hard problem,
+into two smaller and slightly different problems. While WPILib doesn't provide a
+class that will make our new swerve robot drive out of the box, it does provide
+implementations for all of the difficult to solve problems that prevent you from
+driving with a swerve drive base.
+
+#### Inverse Kinematics
+
+The first and more difficult of the two problems is figuring out where we even
+want the swerve modules to point. We want to be able to define the linear and
+angular velocity we want our robot to move, and get the individual velocities
+of our swerve modules necessary to achieve that.
+
+> I am sorry in advance to anyone seeking clarity in terminology, I will be
+> switching between speed and velocity in this article, when most of the time I
+> mean velocity.
+
+If we were getting the resulting robot speed from individual module speeds, that
+math would be referred to as Kinematics, however we want to do the opposite.
+Getting the component module speeds to reach a target robot speed would be
+Inverse Kinematics!
+
+Now that I've introduced the terminology, I'll now break the news that I won't
+be going over the inverse kinematics math. The general case is very solveable
+with a little linear algebra experience, and the simpler case that you more
+likely have on your robot is solveable with trig, albeit the implementation I
+think will be slower. I highly encourage you to explore solving this math
+yourself, as well as comparing your math to other people's implementations online.
+
+However I am interested in getting a robot running using just WPILib and elbow
+grease, and thankfully WPILib has our backs for this problem.
+
+If our robot had no need to turn, we could simply point all motors in the
+direction of the target heading
+
+##### SwerveDriveKinematics
 
 #### Module Control
 
 Once we know what speed and direction the modules need to go, we need to
 actually control the motors
+
+##### PID Control
 
 ### The problems we can lean on WPILib for
 
@@ -80,6 +121,4 @@ Thankfully WPILib almost entirely removes the kinematics problem for us. The
 
 Our implementation uses PID loops for controlling our module positions. I
 honestly don't know of anyone who _doesn't_ use a PID loop for module heading
-control, and most use them for module speed control.[^1]
-
-[^1]: Testing?
+control, and most use them for module speed control.
