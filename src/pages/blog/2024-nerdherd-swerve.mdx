@@ -103,6 +103,54 @@ direction of the target heading
 
 ##### SwerveDriveKinematics
 
+[examples for most of it's features]: https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html
+[seen here]: https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html#converting-chassis-speeds-to-module-states
+
+WPILib provides us with the `SwerveDriveKinematics` class, and gives us
+[examples for most of it's features]. All you need to do is give it the
+locations for your swerve modules, and it will return an object that
+can turn a `ChassisSpeeds` object into an array of `SwerveModuleState`s,
+which can be [seen here].
+
+This lets us define the speed the robot should be moving, and get the
+speed we want each individual module to be moving.
+
+The code we are currently using utilizes WPILibs module angle optimization, but
+WPILib also provides a tool for cosine compensation.
+
+I'll go over our 2024 code later on, but I'll briefly describe the two buzzwords
+I just used.
+
+###### Module Angle Optimization
+
+[WPILib docs example]: https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html#converting-chassis-speeds-to-module-states
+
+One thing you may notice when setting up a swerve controller that controls your
+swerve modules, is that when you're driving forward, and then start driving back
+wards, the modules need to turn 180 degrees before your robot can start driving
+in the other direction.
+
+The trick is that all we really need to do in that scenario is start driving tha
+t wheel in the other direction without changing the heading at all. Additionally
+if you are pointing at 45 degrees, and you need to be pointing at 180 degrees,
+it's easier to point at 0 degrees and reverse the module's speed.
+
+Here's the [WPILib docs example].
+
+###### Cosine Compensation
+
+[WPILib docs explain in a tiny bit more depth]: https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html#cosine-compensation
+
+The [WPILib docs explain in a tiny bit more depth], but when controlling a
+swerve drive, the current heading of the swerve module won't instantly match
+the target head ing, which means briefly whilst turning toward it's target, the
+module will be moving in the wrong direction.
+
+Cosine compensation simply reduces the speed of the module while it isn't
+pointing in the desired direction.
+
+Our code doesn't currently use this, but in theory it could for the 2025 season.
+
 #### Module Control
 
 Once we know what speed and direction the modules need to go, we need to
@@ -110,15 +158,4 @@ actually control the motors
 
 ##### PID Control
 
-### The problems we can lean on WPILib for
-
-#### WPILib Kinematics
-
-Thankfully WPILib almost entirely removes the kinematics problem for us. The
-`SwerveDriveKinematics` class.
-
-#### PID Loops
-
-Our implementation uses PID loops for controlling our module positions. I
-honestly don't know of anyone who _doesn't_ use a PID loop for module heading
-control, and most use them for module speed control.
+## Our Code
